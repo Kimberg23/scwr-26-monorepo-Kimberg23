@@ -1,6 +1,7 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { get } from 'aws-amplify/api';
+import GitHubBornOn from './GitHubBornOn';
 
 function App() {
   const [coins, setCoins] = useState([]);
@@ -38,6 +39,7 @@ function App() {
           <h5>${coin.price_usd}</h5>
         </div>
       ))}
+      <GitHubBornOn />
     </>
   )
 }
