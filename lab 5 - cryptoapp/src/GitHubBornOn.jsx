@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 
+async function fetchBornOn() {
+    const response = await fetch('https://api.github.com/users/kimberg23');
+    const data = await response.json();
+    return data;
+}
+
 function GitHubBornOn () {
     const [bornOn, setBornOn] = useState("");
     const [name, setName] = useState("");
 
     useEffect(() => {
-        async function fetchBornOn() {
-            const response = await fetch('https://api.github.com/users/kimberg23');
-            const data = await response.json();
+    fetchBornOn().then(data => {
             setBornOn(data.created_at);
             setName(data.login);
-        }
-        fetchBornOn();
+        });
     }, []);
     return (
         <div>

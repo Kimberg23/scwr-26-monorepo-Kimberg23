@@ -1,3 +1,21 @@
+app.get('/githubbornon', async function(req, res) {
+  let username = 'kimberg23';
+  if (req.apiGateway && req.apiGateway.event.queryStringParameters && req.apiGateway.event.queryStringParameters.username) {
+    username = req.apiGateway.event.queryStringParameters.username;
+  }
+  let apiUrl = `https://api.github.com/users/${username}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    res.json({
+      login: data.login,
+      created_at: data.created_at
+    });
+  } catch (error) {
+    res.json({error: error});
+  }
+});
 /*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
@@ -5,9 +23,6 @@ Licensed under the Apache License, Version 2.0 (the "License"). You may not use 
 or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 */
-
-
-
 
 const express = require('express')
 const bodyParser = require('body-parser')
