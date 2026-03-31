@@ -1,4 +1,5 @@
 import { Routes, Route} from 'react-router-dom'
+import { Authenticator } from '@aws-amplify/ui-react'
 
 import Nav from './Nav'
 import Public from './Public'
@@ -7,6 +8,7 @@ import Protected from './Protected'
 
 const Router = () => {
   return (
+    <Authenticator>
     <Routes>
       <Route path="/" element={<Nav />} >
         <Route index element={<Public />} />
@@ -15,6 +17,7 @@ const Router = () => {
         <Route path="*" element={<Public />} />
       </Route>
     </Routes>
+    </Authenticator>
   )
 }
 

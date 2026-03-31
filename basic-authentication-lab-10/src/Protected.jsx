@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react';
-import { Auth } from 'aws-amplify'
-import Container from './Container'
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useNavigate } from 'react-router-dom';
+import Container from './Container';
 
-function Protected(props) {
+function Protected() {
+  const { user } = useAuthenticator((context) => [context.user]);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .catch(() => {
-        props.history.push('/profile')
-      })
-  }, [])
+    if (!user) {
+      navigate('/profile');
+    }
+  }, [user, navigate]);
+
   return (
     <Container>
       <h1>Protected route</h1>
@@ -16,4 +20,4 @@ function Protected(props) {
   );
 }
 
-export default Protected
+export default Protected;
