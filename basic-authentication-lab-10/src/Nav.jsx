@@ -36,9 +36,9 @@ const navLinks = [
 const Nav = () => {
   const [selected, setSelected] = useState('public');
   const location = useLocation();
+  
   useEffect(() => {
    const currentPage = location.pathname.split('/')[1];
-   console.log('Navigation to', location);
    setSelected(currentPage ? currentPage : 'public');
   }, [location]);
 
