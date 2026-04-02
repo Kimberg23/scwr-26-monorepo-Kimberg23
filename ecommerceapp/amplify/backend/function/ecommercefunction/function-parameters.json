@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "function": {
+      "ecommerceappd4da2a83PostConfirmation": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "producttable": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
