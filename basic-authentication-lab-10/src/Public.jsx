@@ -1,11 +1,10 @@
 import React from 'react'
-import Container from './Container'
 
 function Public() {
   return (
-    <Container>
+    <div>
       <h1>Public route</h1>
-    </Container>
+    </div>
   )
 }
 

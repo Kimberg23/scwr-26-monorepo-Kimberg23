@@ -1,7 +1,8 @@
 import { useEffect, useState} from "react";
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Menu } from 'antd'
-import { HomeOutlined, ProfileOutlined, FileProtectOutlined } from '@ant-design/icons'
+import { HomeOutlined, ProfileOutlined, FileProtectOutlined, } from '@ant-design/icons'
+import { IoMdContact } from "react-icons/io";
 
 const navLinks = [
   {
@@ -10,6 +11,15 @@ const navLinks = [
       <Link to="/public">
         <HomeOutlined />
         Home
+      </Link>
+    )
+  },
+  {
+    key: 'alsopublic',
+    label: (
+      <Link to="/alsopublic">
+        <IoMdContact />
+        Also Public
       </Link>
     )
   },

@@ -9,8 +9,7 @@ const Container = ({ children }) => (
 const styles = {
   container: {
     margin: '0 auto',
-    padding: '50px 100px',
-    maxWidth: '800px'
+    padding: '50px 100px'
   }
 }
 

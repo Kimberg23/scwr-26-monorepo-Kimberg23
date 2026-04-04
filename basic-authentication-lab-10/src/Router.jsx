@@ -5,19 +5,28 @@ import Nav from './Nav'
 import Public from './Public'
 import Profile from './Profile'
 import Protected from './Protected'
+import AlsoPublic from './AlsoPublic'
 
 const Router = () => {
   return (
-    <Authenticator>
     <Routes>
       <Route path="/" element={<Nav />} >
         <Route index element={<Public />} />
-        <Route path="protected" element={<Protected />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="alsopublic" element={<AlsoPublic />} />
+        <Route path="protected" element={
+          <Authenticator>
+             <Protected />
+          </Authenticator>
+        } 
+        />
+        <Route path="profile" element={
+          <Authenticator>
+             <Profile />
+          </Authenticator>
+        } />
         <Route path="*" element={<Public />} />
       </Route>
     </Routes>
-    </Authenticator>
   )
 }
 
