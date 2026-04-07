@@ -113,10 +113,19 @@ app.get('/products', async function(req, res) {
     res.json({ error: err })
   }
 })
-
+async function getItems(){
+  var params = { TableName: ddb_table_name }
+  try {
+    const data = await docClient.scan(params).promise()
+    return data
+  } catch (err) {
+    return err
+  }
+}
 /****************************
 * Example post method *
 ****************************/
+
 app.post('/products', async function(req, res) {
   const { body } = req
   const { event } = req.apiGateway
