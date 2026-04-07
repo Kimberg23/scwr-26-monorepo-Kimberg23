@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "lab102b423670": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2o7txdr0j4fwg",
+          "type": "manual"
+        }
       }
     }
   }
