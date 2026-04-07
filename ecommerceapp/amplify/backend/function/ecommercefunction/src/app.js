@@ -20,6 +20,64 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
+const AWS = require('aws-sdk');
+const { v4: uuid } = require('uuid');
+
+/* Cognito SDK */
+const cognito = new
+AWS.CognitoIdentityServiceProvider({
+  apiVersion: '2016-04-18'
+})
+
+/* Cognito User Pool ID
+*  This User Pool ID variable will be given to you by the CLI output after
+   adding the category
+*  This will also be available in the file itself, commented out at the top
+*/
+var userpoolId = process.env.FUNCTION_ECOMMERCEAPPD4DA2A83POSTCONFIRMATION_NAME
+
+// DynamoDB configuration
+const region = process.env.REGION
+const ddb_table_name = process.env.STORAGE_PRODUCTTABLE_NAME
+const docClient = new AWS.DynamoDB.DocumentClient({region})
+
+// amplify/backend/function/ecommercefunction/src/app.js
+async function getGroupsForUser(event) {
+  let userSub =
+    event
+      .requestContext
+      .identity
+      .cognitoAuthenticationProvider
+      .split(':CognitoSignIn:')[1]
+  let userParams = {
+    UserPoolId: userpoolId,
+    Filter: `sub = "${userSub}"`,
+  }
+  let userData = await cognito.listUsers(userParams).promise()
+  const user = userData.Users[0]
+  var groupParams = {
+    UserPoolId: userpoolId,
+    Username: user.Username
+  }
+  const groupData = await cognito.adminListGroupsForUser(groupParams).promise()
+  return groupData
+}
+
+async function canPerformAction(event, group) {
+  return new Promise(async (resolve, reject) => {
+    if (!event.requestContext.identity.cognitoAuthenticationProvider) {
+      return reject()
+    }
+    const groupData = await getGroupsForUser(event)
+    const groupsForUser = groupData.Groups.map(group => group.GroupName)
+    if (groupsForUser.includes(group)) {
+      resolve()
+    } else {
+      reject('user not in group, cannot perform action..')
+    }
+  })
+}
+
 // declare a new express app
 const app = express()
 app.use(bodyParser.json())
@@ -47,11 +105,36 @@ app.get('/products/*', function(req, res) {
   res.json({success: 'get call succeed!', url: req.url});
 });
 
+app.get('/products', async function(req, res) {
+  try {
+    const data = await getItems()
+    res.json({ data: data })
+  } catch (err) {
+    res.json({ error: err })
+  }
+})
+
 /****************************
 * Example post method *
 ****************************/
+app.post('/products', async function(req, res) {
+  const { body } = req
+  const { event } = req.apiGateway
+  try {
+    await canPerformAction(event, 'Admin')
+    const input = { ...body, id: uuid() }
+    var params = {
+      TableName: ddb_table_name,
+      Item: input
+    }
+    await docClient.put(params).promise()
+    res.json({ success: 'item saved to database..' })
+  } catch (err) {
+    res.json({ error: err })
+  }
+});
 
-app.post('/products', function(req, res) {
+app.post('/products', async function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
@@ -78,6 +161,20 @@ app.put('/products/*', function(req, res) {
 /****************************
 * Example delete method *
 ****************************/
+app.delete('/products', async function(req, res) {
+  const { event } = req.apiGateway
+  try {
+    await canPerformAction(event, 'Admin')
+    var params = {
+      TableName : ddb_table_name,
+      Key: { id: req.body.id }
+    }
+    await docClient.delete(params).promise()
+    res.json({ success: 'successfully deleted item' })
+  } catch (err) {
+    res.json({ error: err })
+  }
+});
 
 app.delete('/products', function(req, res) {
   // Add your code here
