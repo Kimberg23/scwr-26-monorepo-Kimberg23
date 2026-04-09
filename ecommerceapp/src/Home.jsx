@@ -5,7 +5,7 @@ import { List } from 'antd'
 import checkUser from './checkUser'
 
 function Main() {
-  const [state, setState] = useState({products: [], loading: true})
+  const [state, setState] = useState({products: [], loading: false})
   const [user, updateUser] = useState({})
 
 //   let didCancel = false
@@ -26,6 +26,7 @@ function Main() {
 
     console.log('data: ', data)
     // if (didCancel) return
+    if (!data || !data.data || !data.data.Items);
     setState({
       products: data.data.Items, loading: false
     })
@@ -52,6 +53,7 @@ function Main() {
 
   return (
     <Container>
+      <h1>Hello World</h1>
       <List
         itemLayout="horizontal"
         dataSource={state.products}

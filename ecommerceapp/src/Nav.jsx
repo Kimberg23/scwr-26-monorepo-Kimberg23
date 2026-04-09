@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Menu } from 'antd'
 import { HomeOutlined, UserOutlined, ProfileOutlined } from '@ant-design/icons'
-import { Hub } from 'aws-amplify'
+import { Hub } from 'aws-amplify/utils'
 import checkUser from './checkUser'
 
 const getNavLinks = (isAdmin) => {

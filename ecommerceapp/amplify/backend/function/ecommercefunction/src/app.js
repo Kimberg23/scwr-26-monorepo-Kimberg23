@@ -34,7 +34,7 @@ AWS.CognitoIdentityServiceProvider({
    adding the category
 *  This will also be available in the file itself, commented out at the top
 */
-var userpoolId = process.env.FUNCTION_ECOMMERCEAPPD4DA2A83POSTCONFIRMATION_NAME
+var userpoolId = process.env.AUTH_ECOMMERCEAPPD4DA2A83POSTCONFIRMATION_NAME
 
 // DynamoDB configuration
 const region = process.env.REGION

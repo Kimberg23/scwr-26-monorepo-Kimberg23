@@ -3,11 +3,12 @@ import { fetchAuthSession } from 'aws-amplify/auth'
 async function checkUser(updateUser) {
     
     try {
+
         const userData = await fetchAuthSession();
 
-        if (!userData.token) {
-            console.log('userData: ', userData)
-            updateUser();
+        if (!userData.tokens) {
+            console.log('no user token found. userData: ', userData)
+            updateUser({});
             return;
         }
 

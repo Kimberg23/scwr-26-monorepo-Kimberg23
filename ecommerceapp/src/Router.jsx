@@ -1,5 +1,5 @@
 
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import Nav from './Nav'
 import Admin from './Admin'
