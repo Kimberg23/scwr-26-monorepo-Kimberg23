@@ -57,6 +57,7 @@ const Nav = () => {
         checkUser(updateUser)
       }
     })
+    
 
     // determine the current page
     const currentPage = location.pathname.split('/')[1]
