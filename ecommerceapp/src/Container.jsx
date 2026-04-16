@@ -7,7 +7,7 @@ export default function Container({ children}) {
 }
 
 const containerStyle = {
-    width: 900,
+    maxWidth: 900,
     margin: '0 auto',
     padding: '20px 0',
 }

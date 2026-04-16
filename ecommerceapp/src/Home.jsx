@@ -26,7 +26,7 @@ function Main() {
 
     console.log('data: ', data)
     // if (didCancel) return
-    if (!data || !data.data || !data.data.Items);
+    if (!data || !data.data || !data.data.Items) return
     setState({
       products: data.data.Items, loading: false
     })
