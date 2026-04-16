@@ -1,5 +1,13 @@
 {
   "permissions": {
+    "auth": {
+      "ecommerceappd4da2a83": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
     "function": {
       "ecommerceappd4da2a83PostConfirmation": [
         "create",

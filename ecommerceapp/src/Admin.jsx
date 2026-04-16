@@ -33,7 +33,7 @@ function Admin() {
     })
     console.log('item added/updated', response)
     } catch (err) {
-      console.log('error adding item...')
+      console.log('error adding item...', err)
     }
   }
 

@@ -62,6 +62,13 @@
       "dependsOn": [
         {
           "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "ecommerceappd4da2a83"
+        },
+        {
+          "attributes": [
             "Name"
           ],
           "category": "function",
