@@ -19,9 +19,9 @@ Amplify Params - DO NOT EDIT */
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-
 const AWS = require('aws-sdk');
 const { v4: uuid } = require('uuid');
+
 
 /* Cognito SDK */
 const cognito = new
@@ -95,16 +95,7 @@ app.use(function(req, res, next) {
  * Example get method *
  **********************/
 
-app.get('/products', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
-});
-
-app.get('/products/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
-});
-
+// amplify/backend/function/ecommercefunction/src/app.js
 app.get('/products', async function(req, res) {
   try {
     const data = await getItems()
@@ -113,6 +104,7 @@ app.get('/products', async function(req, res) {
     res.json({ error: err })
   }
 })
+
 async function getItems(){
   var params = { TableName: ddb_table_name }
   try {
@@ -122,6 +114,12 @@ async function getItems(){
     return err
   }
 }
+
+app.get('/products/*', function(req, res) {
+  // Add your code here
+  res.json({success: 'get call succeed!', url: req.url});
+});
+
 /****************************
 * Example post method *
 ****************************/
@@ -141,11 +139,6 @@ app.post('/products', async function(req, res) {
   } catch (err) {
     res.json({ error: err })
   }
-});
-
-app.post('/products', async function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
 
 app.post('/products/*', function(req, res) {
@@ -170,13 +163,13 @@ app.put('/products/*', function(req, res) {
 /****************************
 * Example delete method *
 ****************************/
-app.delete('/products', async function(req, res) {
+app.delete('/products/:id', async function(req, res) {
   const { event } = req.apiGateway
   try {
     await canPerformAction(event, 'Admin')
     var params = {
       TableName : ddb_table_name,
-      Key: { id: req.body.id }
+      Key: { id: req.params.id }
     }
     await docClient.delete(params).promise()
     res.json({ success: 'successfully deleted item' })
@@ -185,10 +178,6 @@ app.delete('/products', async function(req, res) {
   }
 });
 
-app.delete('/products', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
 
 app.delete('/products/*', function(req, res) {
   // Add your code here
