@@ -12,14 +12,20 @@ async function checkUser(updateUser) {
             return;
         }
 
-    const {accessToken: { payload }} = userData.tokens;
+    const { accessToken: { payload } } = userData.tokens;
+
+    const username =
+      payload['cognito:username'] ||
+      payload.username ||
+      payload.sub
 
     const isAuthorized =
       payload['cognito:groups'] &&
       payload['cognito:groups'].includes('Admin')
 
     updateUser({
-      username: payload['cognito:username'],
+      username,
+      isLoggedIn: true,
       isAuthorized
   })
     } catch (error) {

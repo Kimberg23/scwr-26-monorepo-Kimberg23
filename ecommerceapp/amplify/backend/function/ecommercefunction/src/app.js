@@ -78,6 +78,23 @@ async function canPerformAction(event, group) {
   })
 }
 
+async function canUpvote(event) {
+  return new Promise(async (resolve, reject) => {
+    if (!event.requestContext.identity.cognitoAuthenticationProvider) {
+      return reject('user must be authenticated to upvote')
+    }
+
+    const groupData = await getGroupsForUser(event)
+    const groupsForUser = groupData.Groups.map(group => group.GroupName)
+
+    if (groupsForUser.includes('Admin')) {
+      return reject('admins cannot upvote')
+    }
+
+    resolve()
+  })
+}
+
 // declare a new express app
 const app = express()
 app.use(bodyParser.json())
@@ -141,6 +158,35 @@ app.post('/products', async function(req, res) {
   }
 });
 
+app.post('/products/:id/upvote', async function(req, res) {
+  const { event } = req.apiGateway
+
+  try {
+    await canUpvote(event)
+
+    const params = {
+      TableName: ddb_table_name,
+      Key: { id: req.params.id },
+      UpdateExpression: 'SET upvotes = if_not_exists(upvotes, :zero) + :inc',
+      ExpressionAttributeValues: {
+        ':zero': 0,
+        ':inc': 1
+      },
+      ConditionExpression: 'attribute_exists(id)',
+      ReturnValues: 'UPDATED_NEW'
+    }
+
+    const result = await docClient.update(params).promise()
+    const upvotes = result.Attributes && result.Attributes.upvotes ? result.Attributes.upvotes : 0
+    res.json({ success: 'upvote saved', data: { id: req.params.id, upvotes } })
+  } catch (err) {
+    const message = err && err.code === 'ConditionalCheckFailedException'
+      ? 'item not found'
+      : err
+    res.status(400).json({ error: message })
+  }
+});
+
 app.post('/products/*', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
@@ -177,7 +223,6 @@ app.delete('/products/:id', async function(req, res) {
     res.json({ error: err })
   }
 });
-
 
 app.delete('/products/*', function(req, res) {
   // Add your code here
