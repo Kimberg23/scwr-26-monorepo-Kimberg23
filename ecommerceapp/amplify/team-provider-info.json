@@ -33,6 +33,12 @@
       },
       "api": {
         "ecommerceapi": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2wqqw66xxchqj",
+          "type": "manual"
+        }
       }
     }
   }
